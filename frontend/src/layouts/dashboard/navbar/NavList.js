@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import CircleIcon from '@mui/icons-material/Circle';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 
 const NavList = ({ list }) => {
@@ -27,6 +29,9 @@ const NavList = ({ list }) => {
 
   const active = getActive(list.path);
 
+  const colorActive = {
+    color: (theme) => (active ? theme.palette.primary.main : 'text.secondary'),
+  };
   return (
     <>
       <ListItem disablePadding>
@@ -35,14 +40,7 @@ const NavList = ({ list }) => {
           sx={{ p: 2, borderRadius: (theme) => theme.shape }}
         >
           <ListItemIcon>
-            <Iconify
-              icon={icon}
-              sx={{
-                color: (theme) =>
-                  active ? theme.palette.primary.main : 'text.secondary',
-                fontSize: 20,
-              }}
-            />
+            <Iconify icon={icon} sx={colorActive} />
           </ListItemIcon>
           <ListItemText
             secondary={
@@ -55,6 +53,11 @@ const NavList = ({ list }) => {
               </Typography>
             }
           />
+          {open ? (
+            <ExpandMoreIcon sx={colorActive} />
+          ) : (
+            <ChevronRightIcon sx={colorActive} />
+          )}
         </ListItemButton>
       </ListItem>
       <Collapse in={open}>
