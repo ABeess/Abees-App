@@ -1,31 +1,26 @@
-import { IconButtonAnimate } from '@/components/animate';
-import Iconify from '@/components/Iconify';
-import { TableMoreMenu } from '@/section/@dashboard/user';
+import UserTableHead from '@/section/@dashboard/user/UserTableHead';
+import UserTableRow from '@/section/@dashboard/user/UserTableRow';
 import {
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
+  Button,
+  Card,
+  Container,
   Paper,
   Stack,
+  Tab,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
+  TableFooter,
+  TablePagination,
   TableRow,
+  TextField,
+  Toolbar,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import { Box } from '@mui/system';
+import React, { useState } from 'react';
+import DialogCustom from '@/components/DialogCustom';
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'company', label: 'Company', align: 'left' },
-  { id: 'phone', label: 'Phone', align: 'left' },
-  { id: 'address', label: 'Address', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'action', label: '', align: 'left' },
-];
 const TABLE_ROW = [
   { id: 'name', label: 'Name' },
   { id: 'company', label: 'Company' },
@@ -34,87 +29,83 @@ const TABLE_ROW = [
   { id: 'role', label: 'Role' },
   { id: 'action', label: '' },
 ];
+
 const UserList = () => {
+  const [page, setPage] = useState(0);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    setIsOpenModal(true);
+  };
+
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {TABLE_HEAD.map((item) => (
-                <TableCell key={item.id} align={item.align}>
-                  {item.label}
-                </TableCell>
+    <Container maxWidth="lg">
+      <Stack direction="row" justifyContent="space-between" sx={{ mb: 6 }}>
+        <Typography variant="h5" color="initial">
+          User list
+        </Typography>
+        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+          create user
+        </Button>
+      </Stack>
+      <DialogCustom open={isOpenModal} onClose={handleCloseModal} maxWidth="lg">
+        <Typography variant="body1" color="initial">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quod
+          fugit aut dolorem impedit optio deserunt harum! Voluptate, fugit
+          atque, dolorum eos, ipsam eligendi accusamus temporibus quia corporis
+          adipisci harum?
+        </Typography>
+      </DialogCustom>
+
+      <Card>
+        <ToolBarSection />
+        <TableContainer component={Paper}>
+          <Table>
+            <UserTableHead />
+            <TableBody>
+              {TABLE_ROW.map((item, index) => (
+                <UserTableRow key={index} rows={item} />
               ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {TABLE_ROW.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row">
-                  Dao Le Phuong Hoa
-                </TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="center">
-                  <TableMoreMenu>
-                    <MenuItem
-                      sx={{
-                        borderRadius: 1,
-                      }}
-                    >
-                      <ListItemIcon>
-                        <Iconify
-                          icon="ic:baseline-delete"
-                          width={20}
-                          height={20}
-                          color={(theme) => theme.palette.error.main}
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Typography variant="subtitle2" color="error">
-                            Delete
-                          </Typography>
-                        }
-                      />
-                    </MenuItem>
-                    <MenuItem
-                      sx={{
-                        borderRadius: 1,
-                      }}
-                    >
-                      <ListItemIcon>
-                        <Iconify
-                          icon="clarity:edit-solid"
-                          width={20}
-                          height={20}
-                          color={(theme) => theme.palette.warning.main}
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              color: (theme) => theme.palette.warning.main,
-                            }}
-                          >
-                            Edit
-                          </Typography>
-                        }
-                      />
-                    </MenuItem>
-                  </TableMoreMenu>
-                </TableCell>
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                  count={TABLE_ROW.length}
+                  page={page}
+                  rowsPerPage={5}
+                  onPageChange={handleChangePage}
+                />
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </Card>
+    </Container>
+  );
+};
+
+const ToolBarSection = () => {
+  return (
+    <Stack spacing={1} sx={{ mb: 2 }}>
+      <Toolbar
+        sx={{
+          bgcolor: (theme) => theme.palette.grey[200],
+          mb: 2,
+        }}
+      >
+        <Tab label="All"></Tab>
+      </Toolbar>
+      <Box sx={{ px: 3 }}>
+        <TextField label="Search" fullWidth />
+      </Box>
+    </Stack>
   );
 };
 

@@ -46,8 +46,7 @@ const ContentStyles = styled(Box)(({ theme }) => ({
 const Login = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [, setAuth] = useRecoilState(authAtom);
-  const [state, dispatch] = useAuth();
-  console.log('Login ~ state', state);
+  const [, dispatch] = useAuth();
   const navigate = useNavigate();
   const handleLogin = async (user) => {
     try {
